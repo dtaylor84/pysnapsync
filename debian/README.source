@@ -1,0 +1,33 @@
+pysnapsync for Debian
+--------------------
+
+git-pbuilder
+https://wiki.debian.org/git-pbuilder
+
+N.B.
+$ DIST=stretch ARCH=amd64 git-pbuilder create
+$ gbp buildpackage
+
+
+Using Git for Debian Packaging
+https://www.eyrie.org/~eagle/notes/debian/git.html#combine
+
+Packaging With Git
+https://wiki.debian.org/PackagingWithGit#Packaging_with_Git
+
+Debian New Maintainers' Guide
+https://www.debian.org/doc/manuals/maint-guide/
+
+Creating a release with github-release:
+
+#export GITHUB_TOKEN=... GITHUB_USER=dtaylor84 GITHUB_REPO=pysnapsync
+tag=v0.1a1
+file=${tag}.tar.gz
+github-release release -t ${tag}
+wget https://github.com/$GITHUB_USER/$GITHUB_REPO/archive/release/${file}
+gpg2 --armor --detach-sign ${file}
+github-release upload -t ${tag} -n ${file}.asc -f ${file}.asc
+rm -f ${file} ${file}.asc
+
+ -- David Taylor <davidt@yadt.uk>  Sun, 31 Jul 2016 18:21:58 +0100
+

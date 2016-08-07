@@ -1,0 +1,52 @@
+Source: pysnapsync
+Section: admin
+Priority: optional
+Maintainer: David Taylor <davidt@yadt.uk>
+Build-Depends: debhelper (>=9),
+ dh-python,
+ python-all,
+ python3-all,
+ python-setuptools,
+ python3-setuptools,
+ python-pypandoc,
+ python3-pypandoc,
+ python-sphinx,
+ python3-sphinx,
+ python-yaml,
+ python3-yaml,
+ pandoc
+Standards-Version: 3.9.8
+Homepage: https://github.com/dtaylor84/pysnapsync
+X-Python2-Version: >= 2.7
+X-Python3-Version: >= 3.3
+#Vcs-Git: git://anonscm.debian.org/collab-maint/pysnapsync.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/pysnapsync.git
+
+Package: python-pysnapsync
+Architecture: all
+Conflicts: python3-pysnapsync
+Depends: ${python:Depends}, ${misc:Depends}
+Suggests: python-pysnapsync-doc
+Description: LVM to Btrfs snapshot backup, using rsync (Python 2)
+ Backup LVM snapshopts to Btrfs snapshots using rsync over ssh.
+ .
+ This package installs the library for Python 2.
+
+Package: python3-pysnapsync
+Architecture: all
+Conflicts: python-pysnapsync
+Depends: ${python3:Depends}, ${misc:Depends}
+Suggests: python-pysnapsync-doc
+Description: LVM to Btrfs snapshot backup, using rsync (Python 3)
+ Backup LVM snapshopts to Btrfs snapshots using rsync over ssh.
+ .
+ This package installs the library for Python 3.
+
+Package: python-pysnapsync-doc
+Architecture: all
+Section: doc
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Description: LVM to Btrfs snapshot backup, using rsync (common documentation)
+ Backup LVM snapshopts to Btrfs snapshots using rsync over ssh.
+ .
+ This is the common documentation package.
