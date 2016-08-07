@@ -1,0 +1,22 @@
+doc-warnings: true
+test-warnings: true
+member-warnings: true
+
+strictness: veryhigh
+
+max-line-length: 120
+
+python-targets:
+  - 2
+  - 3
+
+ignore-paths:
+  - docs/source/conf.py
+
+pep8:
+  disable:
+    - W503
+
+pep257:
+  disable:
+    - D203
