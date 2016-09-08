@@ -11,7 +11,14 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+.. autosummary::
+   :toctree: _autosummary
 
+   pysnapsync
+   pysnapsync.client
+   pysnapsync.client.snapsync
+   pysnapsync.server
+   pysnapsync.server.snapsync_rsync
 
 Indices and tables
 ==================

@@ -18,4 +18,4 @@ from __future__ import division
 from pysnapsync import client
 from pysnapsync import server
 
-__all__ = [client, server]
+__all__ = [x.__name__.split(".")[-1] for x in [client, server]]

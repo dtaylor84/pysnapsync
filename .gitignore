@@ -62,6 +62,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/source/_autosummary/
 
 # PyBuilder
 target/
@@ -81,6 +82,8 @@ celerybeat-schedule
 # virtualenv
 venv/
 ENV/
+env2/
+env3/
 
 # Spyder project settings
 .spyderproject

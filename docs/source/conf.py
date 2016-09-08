@@ -16,9 +16,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../'))
 
 # -- General configuration ------------------------------------------------
 
@@ -31,7 +31,10 @@
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
@@ -343,3 +346,51 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
+
+
+autodoc_default_flags = [
+    'members',
+    'undoc-members',
+    'private-members',
+    'special-members',
+    'inherited-members',
+    'show-inheritance',
+]
+
+autosummary_generate = True
+
+# Napoleon settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_private_with_doc = Treu
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+
+def check_object_path(key, url, path):
+    if os.path.isfile(path):
+        return {key: (url, path)}
+    return {}
+
+intersphinx_mapping = {}
+
+intersphinx_mapping.update(
+    check_object_path('python',
+        'http://docs.python.org/',
+        '/usr/share/doc/python'
+        + '.'.join([str(x) for x in sys.version_info[0:2]])
+        + '/html/objects.inv'))
+
+#intersphinx_mapping.update(
+#    check_object_path('kombu',
+#        'http://kombu.readthedocs.org/en/latest/',
+#        '/usr/share/doc/python-kombu-doc/html/objects.inv'))
+#
+#intersphinx_mapping.update(
+#    check_object_path('amqp',
+#        'http://amqp.readthedocs.org/en/latest/',
+#        '/usr/share/doc/python-amqp-doc/html/objects.inv'))

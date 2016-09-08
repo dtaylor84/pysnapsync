@@ -17,4 +17,4 @@ from __future__ import division
 
 from pysnapsync.client import snapsync
 
-__all__ = [snapsync]
+__all__ = [x.__name__.split(".")[-1] for x in [snapsync]]
