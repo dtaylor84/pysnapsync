@@ -28,8 +28,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'pysnapsync=pysnapsync.client.pysnapsync:main',
-            'pysnapsync_rsync_wrapper=pysnapsync.server.pysnapsync_rsync_wrapper:main',
+            'snapsync=pysnapsync.client.snapsync:main',
+            'snapsync_rsync=pysnapsync.server.snapsync_rsync:main',
         ],
     },
     classifiers=[
