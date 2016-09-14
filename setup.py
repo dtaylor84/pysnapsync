@@ -50,7 +50,7 @@ setup(
         'Topic :: System :: Archiving :: Backup',
     ],
     install_requires=[
-        'pyyaml',
+        'ruamel.yaml',
         'pypandoc'
     ]
 )

@@ -21,7 +21,8 @@ from datetime import datetime
 import os
 import subprocess
 import sys
-import yaml
+import ruamel.yaml
+import argparse
 
 
 class Config(object):
@@ -185,7 +186,20 @@ def process_volume_groups():
 
 def main():
     """Execute script."""
-    CONFIG.load("snapsync.yaml")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", default="/etc/snapsync.yml",
+        help="set config file path")
+    parser.add_argument("--generate-config", action="store_true",
+        help="output config file template and exit")
+    parser.add_argument("-V", "--version", action="version", version="%(prog)s 0.0")
+    args = parser.parse_args()
+
+    try:
+        CONFIG.load(args.config)
+    except Exception as e:
+        print("Failed to load config:", e, file=sys.stderr)
+        sys.exit(2)
+
     print(CONFIG.config)
 
     for mount in CONFIG.config['mounts']:
