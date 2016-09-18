@@ -21,9 +21,10 @@ from datetime import datetime
 import os
 import subprocess
 import sys
-import ruamel.yaml
+import ruamel.yaml as yaml
 import argparse
-
+from pykwalify.core import Core
+from pkg_resources import resource_stream
 
 class Config(object):
     """Store configuration."""
@@ -32,8 +33,14 @@ class Config(object):
 
     def load(self, config_file):
         """Load configuration from config_file."""
-        with open(config_file, 'r') as config_stream:
-            self.config = yaml.load(config_stream)
+        with resource_stream(__name__, 'config-schema.yaml') as schema_stream:
+            schema = yaml.load(schema_stream)
+
+        c = Core(source_file=config_file, schema_data=schema)
+        self.config = c.validate(raise_exception=True)
+
+        print("Read configuration successfully!")
+        sys.exit(0)
 
 
 CONFIG = Config()

@@ -1,0 +1,5 @@
+# snapsync config-schema.yaml
+
+type: seq
+sequence:
+ - type: str

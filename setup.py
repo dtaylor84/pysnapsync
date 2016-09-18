@@ -24,7 +24,10 @@ setup(
     url='https://github.com/dtaylor84/pysnapsync',
     packages=find_packages(where='.'),
     package_data={
-        'pysnapsync': ['pysnapsync.yaml'],
+        'pysnapsync.client': [
+            'snapsync.yaml',
+            'config-schema.yaml',
+        ],
     },
     entry_points={
         'console_scripts': [
