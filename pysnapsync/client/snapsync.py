@@ -21,7 +21,7 @@ from datetime import datetime
 import os
 import subprocess
 import sys
-import ruamel.yaml as yaml
+import yaml
 import argparse
 from pykwalify.core import Core
 from pkg_resources import resource_stream
