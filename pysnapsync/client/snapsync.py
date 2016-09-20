@@ -16,15 +16,16 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
 
+import argparse
 import collections
 from datetime import datetime
 import os
 import subprocess
 import sys
 import yaml
-import argparse
 from pykwalify.core import Core
 from pkg_resources import resource_stream
+
 
 class Config(object):
     """Store configuration."""
@@ -36,8 +37,8 @@ class Config(object):
         with resource_stream(__name__, 'config-schema.yaml') as schema_stream:
             schema = yaml.load(schema_stream)
 
-        c = Core(source_file=config_file, schema_data=schema)
-        self.config = c.validate(raise_exception=True)
+        core = Core(source_file=config_file, schema_data=schema)
+        self.config = core.validate(raise_exception=True)
 
         print("Read configuration successfully!")
         sys.exit(0)
@@ -194,17 +195,19 @@ def process_volume_groups():
 def main():
     """Execute script."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", default="/etc/snapsync.yml",
+    parser.add_argument(
+        "-c", "--config", default="/etc/snapsync.yml",
         help="set config file path")
-    parser.add_argument("--generate-config", action="store_true",
+    parser.add_argument(
+        "--generate-config", action="store_true",
         help="output config file template and exit")
     parser.add_argument("-V", "--version", action="version", version="%(prog)s 0.0")
     args = parser.parse_args()
 
     try:
         CONFIG.load(args.config)
-    except Exception as e:
-        print("Failed to load config:", e, file=sys.stderr)
+    except Exception as ex:
+        print("Failed to load config:", ex, file=sys.stderr)
         sys.exit(2)
 
     print(CONFIG.config)

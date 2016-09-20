@@ -52,8 +52,6 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Topic :: System :: Archiving :: Backup',
     ],
-    install_requires=[
-        'ruamel.yaml',
-        'pypandoc'
-    ]
+    install_requires=open("requirements.in").readlines(),
+    tests_require=open("requirements.testing.in").readlines(),
 )
