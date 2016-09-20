@@ -206,7 +206,7 @@ def main():
 
     try:
         CONFIG.load(args.config)
-    except Exception as ex:
+    except Exception as ex:  # pylint: disable=locally-disabled,broad-except
         print("Failed to load config:", ex, file=sys.stderr)
         sys.exit(2)
 
