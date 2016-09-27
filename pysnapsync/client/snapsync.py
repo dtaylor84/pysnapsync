@@ -63,32 +63,32 @@ def find_mount(mount):
     output = subprocess.check_output(
         ["lvs"] + CONFIG.config['lvs']['options'] + [filesystem['source']])
     logical_volumes = yaml.load(output)
-    logical_volume = logical_volumes['report'][0]['logical_volume'][0]
+    logical_volume = logical_volumes['report'][0]['lv'][0]
 
-    VGINFO[logical_volume['volume_group_name']][logical_volume['logical_volume_name']] = mount_path
+    VGINFO[logical_volume['vg_name']][logical_volume['lv_name']] = mount_path
 
     snap_logical_volume = (
-        logical_volume['volume_group_name']
-        + "/" + CONFIG.config['rbaksnap_prefix'] + logical_volume['logical_volume_name'])
+        logical_volume['vg_name']
+        + "/" + CONFIG.config['rbaksnap_prefix'] + logical_volume['lv_name'])
 
     MNTINFO[mount_path] = {}
-    MNTINFO[mount_path]['volume_group_name'] = logical_volume['volume_group_name']
-    MNTINFO[mount_path]['logical_volume_name'] = logical_volume['logical_volume_name']
-    MNTINFO[mount_path]['snap_logical_volume'] = snap_logical_volume
+    MNTINFO[mount_path]['vg_name'] = logical_volume['vg_name']
+    MNTINFO[mount_path]['lv_name'] = logical_volume['lv_name']
+    MNTINFO[mount_path]['snap_lv'] = snap_logical_volume
 
     while True:
         output = subprocess.check_output(
-            ["logical_volumes"]
-            + CONFIG.config['logical_volumes']['options']
+            ["lvs"]
+            + CONFIG.config['lvs']['options']
             + [snap_logical_volume],
             stderr=os.devnull)
         logical_volumes = yaml.load(output)
-        if len(logical_volumes['report'][0]['logical_volume']) == 0:
+        if len(logical_volumes['report'][0]['lv']) == 0:
             return  # no existing snap-LV
 
-        logical_volume = logical_volumes['report'][0]['logical_volume'][0]
-        path = logical_volume['logical_volume_path']
-        attr = logical_volume['logical_volume_attr']
+        logical_volume = logical_volumes['report'][0]['lv'][0]
+        path = logical_volume['lv_path']
+        attr = logical_volume['lv_attr']
         logical_volume_type = attr[0]
         logical_volume_perm = attr[1]
         logical_volume_use = attr[5]
@@ -118,30 +118,30 @@ def find_mount(mount):
 def process_volume_groups():
     """Do backup."""
     sources = []
-    volume_groupcount = {}
+    volume_group_count = {}
 
     for volume_group in VGINFO:
-        volume_groupcount[volume_group] = len(VGINFO[volume_group])
+        volume_group_count[volume_group] = len(VGINFO[volume_group])
 
     for mount in sorted(MNTINFO):
         mnt = MNTINFO[mount]
 
         print(
-            "Process mount", mount, mnt['logical_volume_name'],
-            mnt['volume_group_name'], mnt['snap_logical_volume'])
+            "Process mount", mount, mnt['lv_name'],
+            mnt['vg_name'], mnt['snap_lv'])
 
-        volume_group_pct = "%3.0f" % (100 / volume_groupcount[mnt['volume_group_name']])
-        volume_groupcount[mnt['volume_group_name']] -= 1
+        volume_group_pct = "%3.0f" % (100 / volume_group_count[mnt['vg_name']])
+        volume_group_count[mnt['vg_name']] -= 1
 
         subprocess.check_call(
             ["lvcreate", "-pr", "--snapshot", "--name",
-             CONFIG.config['rbaksnap_prefix'] + mnt['logical_volume_name'],
+             CONFIG.config['rbaksnap_prefix'] + mnt['lv_name'],
              "-l" + volume_group_pct + "%FREE",
-             mnt['volume_group_name'] + "/" + mnt['logical_volume_name']],
+             mnt['vg_name'] + "/" + mnt['lv_name']],
             stdout=os.devnull,
             stderr=subprocess.STDOUT)
         subprocess.check_call(
-            ["mount", "-r", "/dev/" + mnt['snap_logical_volume'],
+            ["mount", "-r", "/dev/" + mnt['snap_lv'],
              CONFIG.config['tmp_mount'] + mount],
             stdout=os.devnull,
             stderr=subprocess.STDOUT)
@@ -182,10 +182,10 @@ def process_volume_groups():
     for mount in sorted(MNTINFO, reverse=True):
         mnt = MNTINFO[mount]
         subprocess.check_output(
-            ["umount", "/dev/" + mnt['snap_logical_volume']],
+            ["umount", "/dev/" + mnt['snap_lv']],
             stderr=subprocess.STDOUT)
         subprocess.check_output(
-            ["logical_volumeremove", "-f", mnt['snap_logical_volume']],
+            ["lvremove", "-f", mnt['snap_lv']],
             stderr=subprocess.STDOUT)
 
 
