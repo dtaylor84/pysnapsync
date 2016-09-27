@@ -40,9 +40,6 @@ class Config(object):
         core = Core(source_file=config_file, schema_data=schema)
         self.config = core.validate(raise_exception=True)
 
-        print("Read configuration successfully!")
-        sys.exit(0)
-
 
 CONFIG = Config()
 MNTINFO = {}
@@ -64,7 +61,7 @@ def find_mount(mount):
     # blk = blks['blockdevices'][0]
 
     output = subprocess.check_output(
-        ["logical_volumes"] + CONFIG.config['logical_volumes']['options'] + [filesystem['source']])
+        ["lvs"] + CONFIG.config['lvs']['options'] + [filesystem['source']])
     logical_volumes = yaml.load(output)
     logical_volume = logical_volumes['report'][0]['logical_volume'][0]
 
