@@ -81,7 +81,7 @@ def find_mount(mount):
             ["lvs"]
             + CONFIG.config['lvs']['options']
             + [snap_logical_volume],
-            stderr=os.devnull)
+            stderr=subprocess.DEVNULL)
         logical_volumes = yaml.load(output)
         if len(logical_volumes['report'][0]['lv']) == 0:
             return  # no existing snap-LV
@@ -111,7 +111,7 @@ def find_mount(mount):
 
     subprocess.call(
         ["lvremove", "-f", snap_logical_volume],
-        stdout=os.devnull,
+        stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT)
 
 
@@ -138,12 +138,12 @@ def process_volume_groups():
              CONFIG.config['rbaksnap_prefix'] + mnt['lv_name'],
              "-l" + volume_group_pct + "%FREE",
              mnt['vg_name'] + "/" + mnt['lv_name']],
-            stdout=os.devnull,
+            stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT)
         subprocess.check_call(
             ["mount", "-r", "/dev/" + mnt['snap_lv'],
              CONFIG.config['tmp_mount'] + mount],
-            stdout=os.devnull,
+            stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT)
 
         sources += [CONFIG.config['tmp_mount'] + "/." + mount]
