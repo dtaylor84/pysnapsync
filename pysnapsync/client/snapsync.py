@@ -131,7 +131,7 @@ def process_volume_groups():
             "Process mount", mount, mnt['lv_name'],
             mnt['vg_name'], mnt['snap_lv'])
 
-        volume_group_pct = "%3.0f" % (100 / volume_group_count[mnt['vg_name']])
+        volume_group_pct = "%03.0f" % (100 / volume_group_count[mnt['vg_name']])
         volume_group_count[mnt['vg_name']] -= 1
 
         subprocess.check_call(
@@ -141,6 +141,7 @@ def process_volume_groups():
              mnt['vg_name'] + "/" + mnt['lv_name']],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT)
+
         subprocess.check_call(
             ["mount", "-r", "/dev/" + mnt['snap_lv'],
              CONFIG.config['tmp_mount'] + mount],
@@ -210,7 +211,8 @@ def main():
 
     print(CONFIG.config)
 
-    for mount in CONFIG.config['mounts']:
+    # Do this in reverse order so we clean up failures correctly.
+    for mount in sorted(CONFIG.config['mounts'], key=lambda k: k['path'], reverse=True):
         find_mount(mount)
 
     process_volume_groups()
