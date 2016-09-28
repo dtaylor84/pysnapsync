@@ -83,7 +83,7 @@ def find_mount(mount):
             + [snap_logical_volume],
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL)
-        logical_volumes = yaml.load(snap_subprocess.output)
+        logical_volumes = yaml.load(snap_subprocess.stdout)
         if len(logical_volumes['report'][0]['lv']) == 0:
             return  # no existing snap-LV
 
