@@ -77,12 +77,13 @@ def find_mount(mount):
     MNTINFO[mount_path]['snap_lv'] = snap_logical_volume
 
     while True:
-        output = subprocess.check_output(
+        snap_subprocess = subprocess.run(
             ["lvs"]
             + CONFIG.config['lvs']['options']
             + [snap_logical_volume],
+            stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL)
-        logical_volumes = yaml.load(output)
+        logical_volumes = yaml.load(snap_subprocess.output)
         if len(logical_volumes['report'][0]['lv']) == 0:
             return  # no existing snap-LV
 
