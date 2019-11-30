@@ -19,8 +19,6 @@ import sys
 class Fail(Exception):
     """General exception for all script failures."""
 
-    pass
-
 
 def background():
     """Fork into background."""
@@ -43,7 +41,7 @@ def main_log(host, args):
 
     snap = args[1]
 
-    with open("/backup/btrfs/{0}/logs/{1}.client.log".format(host, snap), 'w') as log:
+    with open("/backup/{0}/logs/{1}.client.log".format(host, snap), 'w') as log:
         for line in sys.stdin:
             print(line, file=log, end="")
 
@@ -59,7 +57,7 @@ def main():
 
     args = shlex.split(os.environ['SSH_ORIGINAL_COMMAND'])
 
-    if len(args) == 0:
+    if not args:
         raise Fail("No arguments")
 
     if len(args) == 2:
@@ -78,7 +76,7 @@ def main():
 
     snap = args.pop(1)
 
-    log = "/backup/btrfs/{0}/logs/{1}".format(host, snap)
+    log = "/backup/{0}/logs/{1}".format(host, snap)
 
     args.insert(2, "--log-file={0}.rsync.log".format(log))
     args.insert(3, "--log-file-format=")
@@ -96,6 +94,6 @@ def main():
 
         subprocess.check_call(
             ['btrfs', 'subvolume', 'snapshot', '-r',
-             '/backup/btrfs/{0}/sync'.format(host),
-             '/backup/btrfs/{0}/{1}'.format(host, snap)],
+             '/backup/{0}/sync'.format(host),
+             '/backup/{0}/{1}'.format(host, snap)],
             stdout=out, stderr=err)

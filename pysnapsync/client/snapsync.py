@@ -27,7 +27,7 @@ from pykwalify.core import Core
 from pkg_resources import resource_stream
 
 
-class Config(object):
+class Config:
     """Store configuration."""
 
     config = {}
@@ -84,7 +84,7 @@ def find_mount(mount):
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL)
         logical_volumes = yaml.load(snap_subprocess.stdout)
-        if len(logical_volumes['report'][0]['lv']) == 0:
+        if not logical_volumes['report'][0]['lv']:
             return  # no existing snap-LV
 
         logical_volume = logical_volumes['report'][0]['lv'][0]
