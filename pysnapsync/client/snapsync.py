@@ -35,7 +35,7 @@ class Config:
     def load(self, config_file):
         """Load configuration from config_file."""
         with resource_stream(__name__, 'config-schema.yaml') as schema_stream:
-            schema = yaml.load(schema_stream)
+            schema = yaml.safe_load(schema_stream)
 
         core = Core(source_file=config_file, schema_data=schema)
         self.config = core.validate(raise_exception=True)
@@ -52,17 +52,17 @@ def find_mount(mount):
 
     output = subprocess.check_output(
         ["findmnt"] + CONFIG.config['findmnt']['options'] + [mount_path])
-    filesystems = yaml.load(output)
+    filesystems = yaml.safe_load(output)
     filesystem = filesystems['filesystems'][0]
 
     # output = subprocess.check_output(
     #     ["lsblk"] + CONFIG.config['lsblk']['options'] + [filesystem['source']])
-    # blks = yaml.load(output)
+    # blks = yaml.safe_load(output)
     # blk = blks['blockdevices'][0]
 
     output = subprocess.check_output(
         ["lvs"] + CONFIG.config['lvs']['options'] + [filesystem['source']])
-    logical_volumes = yaml.load(output)
+    logical_volumes = yaml.safe_load(output)
     logical_volume = logical_volumes['report'][0]['lv'][0]
 
     VGINFO[logical_volume['vg_name']][logical_volume['lv_name']] = mount_path
@@ -83,7 +83,7 @@ def find_mount(mount):
             + [snap_logical_volume],
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL)
-        logical_volumes = yaml.load(snap_subprocess.stdout)
+        logical_volumes = yaml.safe_load(snap_subprocess.stdout)
         if not logical_volumes['report'][0]['lv']:
             return  # no existing snap-LV
 
