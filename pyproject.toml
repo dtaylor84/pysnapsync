@@ -1,52 +1,43 @@
 [build-system]
-requires = ["setuptools>=61.2"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "pysnapsync"
 version = "0.1a1"
-authors = [{name = "David Taylor", email = "davidt@yadt.uk"}]
-license = {text = "GPLv3+"}
+authors = ["David Taylor <davidt@yadt.uk>"]
+license = "GPLv3+"
 description = "Backup from LVM to btrfs, via rsync"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Environment :: Console",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
-    "Programming Language :: Python :: 2",
-    "Programming Language :: Python :: 2.7",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.3",
-    "Programming Language :: Python :: 3.4",
-    "Programming Language :: Python :: 3.5",
-    "Programming Language :: Python :: 3.6",
     "Topic :: System :: Archiving :: Backup",
 ]
 urls = {Homepage = "https://github.com/dtaylor84/pysnapsync"}
-dependencies = ["pyyaml"]
+readme = "README.md"
 
-[project.readme]
-file = "README.md"
-content-type = "rst"
+[tool.poetry.dependencies]
+python = "^3.11"
+pyyaml = "*"
+pykwalify = "*"
 
-[project.scripts]
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+prospector = "*"
+pypandoc = "*"
+pytest = "*"
+tox = "*"
+sphinx = "*"
+
+[tool.poetry.scripts]
 snapsync = "pysnapsync.client.snapsync:main"
 snapsync_rsync = "pysnapsync.server.snapsync_rsync:main"
-
-[project.optional-dependencies]
-testing = [
-    "pip-tools",
-    "prospector",
-    "pypandoc",
-    "pytest",
-    "tox-travis",
-    "tox",
-    "wheel>0.25.0",
-    "sphinx",
-]
 
 [tool.setuptools]
 include-package-data = false
