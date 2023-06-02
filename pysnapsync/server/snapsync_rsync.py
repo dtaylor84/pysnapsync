@@ -41,11 +41,12 @@ def main_log(host, args):
 
     snap = args[1]
 
-    with open("/backup/{0}/logs/{1}.client.log".format(host, snap), 'w') as log:
+    with open(f"/backup/{host}/logs/{snap}.client.log", 'w',
+              encoding="utf-8") as log:
         for line in sys.stdin:
             print(line, file=log, end="")
 
-    exit(0)
+    sys.exit(0)
 
 
 def main():
@@ -76,12 +77,12 @@ def main():
 
     snap = args.pop(1)
 
-    log = "/backup/{0}/logs/{1}".format(host, snap)
+    log = f"/backup/{host}/logs/{snap}"
 
-    args.insert(2, "--log-file={0}.rsync.log".format(log))
+    args.insert(2, f"--log-file={log}.rsync.log")
     args.insert(3, "--log-file-format=")
 
-    with open("{0}.rsync.err".format(log), 'w') as err:
+    with open(f"{log}.rsync.err", 'w', encoding="utf-8") as err:
         subprocess.check_call(
             args,
             executable="/usr/bin/rsync",
@@ -89,11 +90,11 @@ def main():
 
     background()
 
-    with open("{0}.btrfs.out".format(log), 'w') as out, \
-            open("{0}.btrfs.err".format(log), 'w') as err:
+    with open(f"{log}.btrfs.out", 'w', encoding="utf-8") as out, \
+            open(f"{log}.btrfs.err", 'w', encoding="utf-8") as err:
 
         subprocess.check_call(
             ['btrfs', 'subvolume', 'snapshot', '-r',
-             '/backup/{0}/sync'.format(host),
-             '/backup/{0}/{1}'.format(host, snap)],
+             f'/backup/{host}/sync',
+             f'/backup/{host}/{snap}'],
             stdout=out, stderr=err)

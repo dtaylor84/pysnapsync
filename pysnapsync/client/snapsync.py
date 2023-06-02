@@ -51,17 +51,26 @@ def find_mount(mount):
     mount_path = mount['path']
 
     output = subprocess.check_output(
-        ["findmnt"] + CONFIG.config['findmnt']['options'] + [mount_path])
+        ["findmnt"]
+        + CONFIG.config['findmnt']['options']
+        + [mount_path]
+    )
     filesystems = yaml.safe_load(output)
     filesystem = filesystems['filesystems'][0]
 
     # output = subprocess.check_output(
-    #     ["lsblk"] + CONFIG.config['lsblk']['options'] + [filesystem['source']])
+    #     ["lsblk"]
+    #     + CONFIG.config['lsblk']['options']
+    #     + [filesystem['source']]
+    # )
     # blks = yaml.safe_load(output)
     # blk = blks['blockdevices'][0]
 
     output = subprocess.check_output(
-        ["lvs"] + CONFIG.config['lvs']['options'] + [filesystem['source']])
+        ["lvs"]
+        + CONFIG.config['lvs']['options']
+        + [filesystem['source']]
+    )
     logical_volumes = yaml.safe_load(output)
     logical_volume = logical_volumes['report'][0]['lv'][0]
 
@@ -69,7 +78,10 @@ def find_mount(mount):
 
     snap_logical_volume = (
         logical_volume['vg_name']
-        + "/" + CONFIG.config['rbaksnap_prefix'] + logical_volume['lv_name'])
+        + "/"
+        + CONFIG.config['rbaksnap_prefix']
+        + logical_volume['lv_name']
+    )
 
     MNTINFO[mount_path] = {}
     MNTINFO[mount_path]['vg_name'] = logical_volume['vg_name']
@@ -82,7 +94,8 @@ def find_mount(mount):
             + CONFIG.config['lvs']['options']
             + [snap_logical_volume],
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL)
+            stderr=subprocess.DEVNULL
+        )
         logical_volumes = yaml.safe_load(snap_subprocess.stdout)
         if not logical_volumes['report'][0]['lv']:
             return  # no existing snap-LV
@@ -100,7 +113,8 @@ def find_mount(mount):
                 or logical_volume_target != "s"):
             raise RuntimeError(
                 "snapshot LV already exists, but not a RO snapshot: "
-                + snap_logical_volume)
+                + snap_logical_volume
+            )
 
         if logical_volume_use == "-":
             break
@@ -108,12 +122,16 @@ def find_mount(mount):
         if logical_volume_use == "o":
             subprocess.check_call(["umount", path])
         else:
-            raise RuntimeError("snapshot LV already exists, and is in use: " + snap_logical_volume)
+            raise RuntimeError(
+                "snapshot LV already exists, and is in use: "
+                + snap_logical_volume
+            )
 
     subprocess.call(
         ["lvremove", "-f", snap_logical_volume],
         stdout=subprocess.DEVNULL,
-        stderr=subprocess.STDOUT)
+        stderr=subprocess.STDOUT
+    )
 
 
 def process_volume_groups():
@@ -131,7 +149,9 @@ def process_volume_groups():
             "Process mount", mount, mnt['lv_name'],
             mnt['vg_name'], mnt['snap_lv'])
 
-        volume_group_pct = "%03.0f" % (100 / volume_group_count[mnt['vg_name']])
+        volume_group_pct = \
+            f"{(100 / volume_group_count[mnt['vg_name']]):03.0f}"
+
         volume_group_count[mnt['vg_name']] -= 1
 
         subprocess.check_call(
@@ -140,38 +160,52 @@ def process_volume_groups():
              "-l" + volume_group_pct + "%FREE",
              mnt['vg_name'] + "/" + mnt['lv_name']],
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT)
+            stderr=subprocess.STDOUT
+        )
 
         subprocess.check_call(
             ["mount", "-r", "/dev/" + mnt['snap_lv'],
              CONFIG.config['tmp_mount'] + mount],
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT)
+            stderr=subprocess.STDOUT
+        )
 
         sources += [CONFIG.config['tmp_mount'] + "/." + mount]
 
-    snap = "{0:%Y%m%d}T{0:%H%M}Z".format(datetime.utcnow())
+    snap = f"{datetime.utcnow():%Y%m%dT%H%MZ}"
 
     infd, outfd = os.pipe()
 
     infile = os.fdopen(infd)
     outfile = os.fdopen(outfd)
 
-    args = ["ssh"] + [CONFIG.config['rsync']['remote']] + ["rbak-rsync-log"] + [snap]
+    args = (
+        ["ssh"]
+        + [CONFIG.config['rsync']['remote']]
+        + ["rbak-rsync-log"]
+        + [snap]
+    )
+
     ssh_process = subprocess.Popen(
         args,
         stdin=infile,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
+        stderr=subprocess.STDOUT
+    )
 
     infile.close()
 
     # do the rsync!
     subprocess.check_call(
-        ["rsync"] + ["--rsync-path=rsync {0}".format(snap)] + CONFIG.config['rsync']['options']
-        + sources + [CONFIG.config['rsync']['remote'] + ":" + CONFIG.config['rsync']['path']],
+        ["rsync"]
+        + [f"--rsync-path=rsync {snap}"]
+        + CONFIG.config['rsync']['options']
+        + sources
+        + [CONFIG.config['rsync']['remote'] + ":"
+            + CONFIG.config['rsync']['path']],
         stdout=outfile,
-        stderr=subprocess.STDOUT)
+        stderr=subprocess.STDOUT
+    )
 
     outfile.close()
 
@@ -196,11 +230,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-c", "--config", default="/etc/snapsync.yml",
-        help="set config file path")
+        help="set config file path"
+    )
     parser.add_argument(
         "--generate-config", action="store_true",
-        help="output config file template and exit")
-    parser.add_argument("-V", "--version", action="version", version="%(prog)s 0.0")
+        help="output config file template and exit"
+    )
+    parser.add_argument(
+        "-V", "--version", action="version", version="%(prog)s 0.0"
+    )
     args = parser.parse_args()
 
     try:
@@ -212,7 +250,11 @@ def main():
     print(CONFIG.config)
 
     # Do this in reverse order so we clean up failures correctly.
-    for mount in sorted(CONFIG.config['mounts'], key=lambda k: k['path'], reverse=True):
+    for mount in sorted(
+            CONFIG.config['mounts'],
+            key=lambda k: k['path'],
+            reverse=True
+    ):
         find_mount(mount)
 
     process_volume_groups()
