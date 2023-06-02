@@ -1,4 +1,0 @@
-include README.md
-include requirements.in
-include requirements.testing.in
-include requirements.txt

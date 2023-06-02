@@ -1,8 +1,0 @@
-pip-tools
-prospector
-pypandoc
-pytest
-tox-travis
-tox
-wheel>0.25.0
-sphinx
