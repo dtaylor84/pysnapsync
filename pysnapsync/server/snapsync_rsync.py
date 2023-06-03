@@ -29,7 +29,7 @@ def background():
         pid = os.fork()
 
     if pid != 0:
-        os._exit(0)  # pylint: disable=locally-disabled,protected-access
+        os._exit(0)
 
     os.closerange(0, 2)
 

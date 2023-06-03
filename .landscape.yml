@@ -13,7 +13,11 @@ python-targets:
 ignore-paths:
   - docs/source/conf.py
 
-pep257:
+pydocstyle:
   disable:
     - D203
     - D213
+
+pylint:
+  disable:
+    - too-few-public-methods
