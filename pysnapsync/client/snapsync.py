@@ -94,7 +94,8 @@ def find_mount(mount):
             + CONFIG.config['lvs']['options']
             + [snap_logical_volume],
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL
+            stderr=subprocess.DEVNULL,
+            check=True,
         )
         logical_volumes = yaml.safe_load(snap_subprocess.stdout)
         if not logical_volumes['report'][0]['lv']:
@@ -186,43 +187,42 @@ def process_volume_groups():
         + [snap]
     )
 
-    ssh_process = subprocess.Popen(
+    with subprocess.Popen(
         args,
         stdin=infile,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT
-    )
+    ) as ssh_process:
+        infile.close()
 
-    infile.close()
+        # do the rsync!
+        subprocess.check_call(
+            ["rsync"]
+            + [f"--rsync-path=rsync {snap}"]
+            + CONFIG.config['rsync']['options']
+            + sources
+            + [CONFIG.config['rsync']['remote'] + ":"
+                + CONFIG.config['rsync']['path']],
+            stdout=outfile,
+            stderr=subprocess.STDOUT
+        )
 
-    # do the rsync!
-    subprocess.check_call(
-        ["rsync"]
-        + [f"--rsync-path=rsync {snap}"]
-        + CONFIG.config['rsync']['options']
-        + sources
-        + [CONFIG.config['rsync']['remote'] + ":"
-            + CONFIG.config['rsync']['path']],
-        stdout=outfile,
-        stderr=subprocess.STDOUT
-    )
+        outfile.close()
 
-    outfile.close()
+        ssh_output = ssh_process.communicate()[0]
 
-    ssh_output = ssh_process.communicate()[0]
+        if ssh_process.returncode:
+            print("REMOTE", ssh_output.decode(), file=sys.stderr)
+            raise subprocess.CalledProcessError(ssh_process.returncode, args)
 
-    if ssh_process.returncode:
-        print("REMOTE", ssh_output.decode(), file=sys.stderr)
-        raise subprocess.CalledProcessError(ssh_process.returncode, args)
-
-    for mount in sorted(MNTINFO, reverse=True):
-        mnt = MNTINFO[mount]
-        subprocess.check_output(
-            ["umount", "/dev/" + mnt['snap_lv']],
-            stderr=subprocess.STDOUT)
-        subprocess.check_output(
-            ["lvremove", "-f", mnt['snap_lv']],
-            stderr=subprocess.STDOUT)
+        for mount in sorted(MNTINFO, reverse=True):
+            mnt = MNTINFO[mount]
+            subprocess.check_output(
+                ["umount", "/dev/" + mnt['snap_lv']],
+                stderr=subprocess.STDOUT)
+            subprocess.check_output(
+                ["lvremove", "-f", mnt['snap_lv']],
+                stderr=subprocess.STDOUT)
 
 
 def main():

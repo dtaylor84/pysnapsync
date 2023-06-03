@@ -38,13 +38,3 @@ sphinx = "*"
 [tool.poetry.scripts]
 snapsync = "pysnapsync.client.snapsync:main"
 snapsync_rsync = "pysnapsync.server.snapsync_rsync:main"
-
-[tool.setuptools]
-include-package-data = false
-
-[tool.setuptools.packages.find]
-where = ["."]
-namespaces = false
-
-[tool.setuptools.package-data]
-"pysnapsync.client" = ["snapsync.yaml"] # config-schema.yaml
