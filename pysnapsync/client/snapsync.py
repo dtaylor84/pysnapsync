@@ -95,7 +95,7 @@ def find_mount(mount):
             + [snap_logical_volume],
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
-            check=True,
+            check=False,
         )
         logical_volumes = yaml.safe_load(snap_subprocess.stdout)
         if not logical_volumes['report'][0]['lv']:
