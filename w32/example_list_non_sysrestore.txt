@@ -1,0 +1,22 @@
+ClientAccessible:True
+Count:1
+DeviceObject:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy4
+Differential:True
+ExposedLocally:False
+ExposedRemotely:False
+HardwareAssisted:False
+ID:{EE164301-76EC-4F8E-B132-3BDEF202C754}
+Imported:False
+InstallDate:10/11/2016 20:46:53
+NoAutoRelease:True
+NotSurfaced:False
+NoWriters:True
+OriginatingMachine:win550s.yadt.co.uk
+Persistent:True
+Plex:False
+ProviderID:{B5946137-7B9F-4925-AF80-51ABD60B20D5}
+ServiceMachine:win550s.yadt.co.uk
+SetID:{FDA791B0-5BED-4350-8C10-88FE12E0D16A}
+State:12
+Transportable:False
+VolumeName:\\?\Volume{77178a46-30b6-11e5-9bd1-5ce0c5c724c2}\
