@@ -1,0 +1,64 @@
+rsync:
+    options: [
+        -M--reflink-always,
+        -M--fake-super,
+        --protect-args,
+        --recursive,
+        --links,
+        --perms,
+        --times,
+        --group,
+        --owner,
+        --devices,
+        --specials,
+        --compress,
+        #--one-file-system,
+        --relative,
+        --hard-links, # is this still broken??
+        --acls,
+        #--xattrs,
+        --numeric-ids,
+        --delete,
+        --delete-excluded,
+        --inplace,
+        --no-sparse, # XXX - fix patch and enable!
+        --no-whole-file,
+        --stats,
+        --human-readable,
+        --filter=-_/pagefile.sys,
+        --filter=-_/swapfile.sys,
+        --filter=-_/hiberfil.sys,
+    ]
+    remote: rsyncwin550s@critter.yadt.co.uk
+    path: /backup/win550s/sync/
+
+findmnt:
+    options: [
+        --canonicalize,
+        --evaluate,
+        --kernel,
+        --uniq,
+        --nofsroot,
+        --list,
+        --json,
+        "--output=SOURCE,TARGET",
+    ]
+
+lsblk:
+    options: [
+        --json,
+        "--output=TYPE",
+    ]
+
+lvs:
+    options: [
+        --reportformat=json,
+        "-ovg_name,lv_name,lv_attr,lv_path",
+    ]
+
+rbaksnap_prefix: ".+rbak_snap-"
+tmp_mount: "/home/davidt/rbak/mnt"
+
+mounts: [
+    path: c,
+]

@@ -1,0 +1,40 @@
+type: map
+mapping:
+    "rsync":
+        type: map
+        required: true
+        mapping:
+            "options": &options-rule
+                type: seq
+                sequence: [ type: text ]
+            "remote":
+                type: text
+                required: true
+            "path":
+                type: text
+                required: true
+    "findmnt":
+        type: map
+        required: true
+        mapping: { "options": *options-rule }
+    "lsblk":
+        type: map
+        required: true
+        mapping: { "options": *options-rule }
+    "lvs":
+        type: map
+        required: true
+        mapping: { "options": *options-rule }
+    "rbaksnap_prefix":
+        type: text
+        required: true
+    "tmp_mount":
+        type: text
+        required: true
+    "mounts":
+        type: seq
+        required: true
+        sequence:
+            - type: map
+              mapping:
+                  "path": { type: text }

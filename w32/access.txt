@@ -1,0 +1,1 @@
+cat /proc/sys/Device/HarddiskVolumeShadowCopy5/x/backup.bat
