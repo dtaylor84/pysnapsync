@@ -36,7 +36,7 @@ class Config(object):
     def load(self, config_file):
         """Load configuration from config_file."""
         with resource_stream(__name__, 'config-schema.yaml') as schema_stream:
-            schema = yaml.load(schema_stream)
+            schema = yaml.safe_load(schema_stream)
 
         core = Core(source_file=config_file, schema_data=schema)
         self.config = core.validate(raise_exception=True)
