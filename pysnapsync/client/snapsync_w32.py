@@ -93,7 +93,7 @@ def process_mounts():
         device = str(shadow.Properties_['DeviceObject']).split('\\')[-1]
 
         subprocess.check_output(
-            ["C:\\cygwin64\\bin\\ln.exe", "-s", "/proc/sys/Device/{0}/".format(device), "{0}/{1}".format(temp, mount)],
+            ["ln.exe", "-s", "\\\\?\\GLOBALROOT\\Device\\{0}\\".format(device), "{0}\\{1}".format(temp_w32, mount)],
             stderr=subprocess.STDOUT)
 
         sources.append("{0}/./{1}/".format(temp, mount))
@@ -105,7 +105,7 @@ def process_mounts():
     infile = os.fdopen(infd)
     outfile = os.fdopen(outfd)
 
-    args = ["C:\\cygwin64\\bin\\ssh.exe"] + [CONFIG.config['rsync']['remote']] + ["rbak-rsync-log"] + [snap]
+    args = ["C:\\Users\\david\\scoop\\persist\\cygwin\\root\\bin\\ssh.exe"] + [CONFIG.config['rsync']['remote']] + ["rbak-rsync-log"] + [snap]
     ssh_process = subprocess.Popen(
         args,
         stdin=infile,
@@ -116,7 +116,7 @@ def process_mounts():
 
     # do the rsync!
     subprocess.check_call(
-        ["C:\\cygwin64\\bin\\rsync"] + ["--rsync-path=rsync {0}".format(snap)] + ["--rsh=C:\\cygwin64\\bin\\ssh.exe"] + CONFIG.config['rsync']['options']
+        ["C:\\Users\\david\\scoop\\persist\\cygwin\\root\\bin\\rsync.exe"] + ["--rsync-path=rsync {0}".format(snap)] + ["--rsh=C:\\Users\\david\\scoop\\persist\\cygwin\\root\\bin\\ssh.exe"] + CONFIG.config['rsync']['options']
         + sources + [CONFIG.config['rsync']['remote'] + ":" + CONFIG.config['rsync']['path']],
         stdout=outfile,
         stderr=subprocess.STDOUT)
