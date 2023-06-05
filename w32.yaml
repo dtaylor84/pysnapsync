@@ -25,12 +25,28 @@ rsync:
         --no-whole-file,
         --stats,
         --human-readable,
-        --filter=-_/pagefile.sys,
-        --filter=-_/swapfile.sys,
-        --filter=-_/hiberfil.sys,
+        "--filter=H /c/pagefile.sys",
+        "--filter=H /c/swapfile.sys",
+        "--filter=H /c/hiberfil.sys",
+        "--filter=H /c/$Recycle.Bin/",
+        "--filter=H /c/$WinREAgent/",
+        "--filter=H /c/AMD/",
+        "--filter=H /c/Config.Msi/",
+        "--filter=H /c/OneDriveTemp/",
+        "--filter=H /c/ProgramData/",
+        "--filter=H /c/Program Files (x86)/",
+        "--filter=H /c/Program Files/",
+        "--filter=H /c/Recovery/",
+        "--filter=H /c/System Repair/",
+        "--filter=H /c/System Volume Information/",
+        "--filter=H /c/Users/*/AppData/Local/Downloaded Installations/",
+        "--filter=H /c/Users/*/AppData/Local/Docker/wsl/data/",
+        "--filter=H /c/Users/*/AppData/Roaming/Thunderbird/Profiles/",
+        "--filter=H /c/Users/*/Downloads/",
+        "--filter=H /c/Windows/",
     ]
-    remote: rsyncwin550s@critter.yadt.co.uk
-    path: /backup/win550s/sync/
+    remote: rsyncmobius@critter.yadt.co.uk
+    path: /backup/mobius/sync/
 
 findmnt:
     options: [

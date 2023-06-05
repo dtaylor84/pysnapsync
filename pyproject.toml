@@ -8,6 +8,7 @@ version = "0.1a1"
 authors = ["David Taylor <davidt@yadt.uk>"]
 license = "GPLv3+"
 description = "Backup from LVM to btrfs, via rsync"
+keywords = ["backup", "lvm", "rsync", "btrfs"]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Environment :: Console",
@@ -24,6 +25,7 @@ readme = "README.md"
 python = "^3.11"
 pyyaml = "*"
 pykwalify = "*"
+pywin32 = { version = "*", optional = true }
 
 [tool.poetry.group.dev]
 optional = true
@@ -38,3 +40,7 @@ sphinx = "*"
 [tool.poetry.scripts]
 snapsync = "pysnapsync.client.snapsync:main"
 snapsync_rsync = "pysnapsync.server.snapsync_rsync:main"
+snapsync_w32 = { callable = "pysnapsync.client.snapsync_w32:main", extras = ["w32"] }
+
+[tool.poetry.extras]
+w32 = ["pywin32"]
