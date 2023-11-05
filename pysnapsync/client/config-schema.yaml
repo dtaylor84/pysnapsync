@@ -13,6 +13,10 @@ mapping:
             "path":
                 type: text
                 required: true
+            "rsync_path":
+                type: text
+            "ssh_path":
+                type: text
     "findmnt":
         type: map
         required: true

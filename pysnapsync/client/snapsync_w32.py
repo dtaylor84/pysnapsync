@@ -105,7 +105,7 @@ def process_mounts():
     infile = os.fdopen(infd)
     outfile = os.fdopen(outfd)
 
-    args = ["C:\\Users\\david\\scoop\\persist\\cygwin\\root\\bin\\ssh.exe"] + [CONFIG.config['rsync']['remote']] + ["rbak-rsync-log"] + [snap]
+    args = [CONFIG.config['rsync']['ssh_path']] + [CONFIG.config['rsync']['remote']] + ["rbak-rsync-log"] + [snap]
     ssh_process = subprocess.Popen(
         args,
         stdin=infile,
@@ -116,7 +116,7 @@ def process_mounts():
 
     # do the rsync!
     subprocess.check_call(
-        ["C:\\Users\\david\\scoop\\persist\\cygwin\\root\\bin\\rsync.exe"] + ["--rsync-path=rsync {0}".format(snap)] + ["--rsh=C:\\Users\\david\\scoop\\persist\\cygwin\\root\\bin\\ssh.exe"] + CONFIG.config['rsync']['options']
+        [CONFIG.config['rsync']['rsync_path']] + ["--rsync-path=rsync {0}".format(snap)] + ["--rsh=" + CONFIG.config['rsync']['ssh_path']] + CONFIG.config['rsync']['options']
         + sources + [CONFIG.config['rsync']['remote'] + ":" + CONFIG.config['rsync']['path']],
         stdout=outfile,
         stderr=subprocess.STDOUT)
