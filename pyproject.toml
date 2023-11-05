@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pysnapsync"
-version = "0.1a1"
+version = "0.1a2"
 authors = ["David Taylor <davidt@yadt.uk>"]
 license = "GPLv3+"
 description = "Backup from LVM to btrfs, via rsync"
@@ -22,7 +22,7 @@ urls = {Homepage = "https://github.com/dtaylor84/pysnapsync"}
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 pyyaml = "*"
 pykwalify = "*"
 pywin32 = { version = "*", optional = true }
