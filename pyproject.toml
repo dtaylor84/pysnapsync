@@ -22,7 +22,7 @@ urls = {Homepage = "https://github.com/dtaylor84/pysnapsync"}
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 pyyaml = "*"
 pykwalify = "*"
 pywin32 = { version = "*", optional = true }
@@ -32,10 +32,8 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 prospector = "*"
-pypandoc = "*"
 pytest = "*"
 tox = "*"
-sphinx = "*"
 
 [tool.poetry.scripts]
 snapsync = "pysnapsync.client.snapsync:main"

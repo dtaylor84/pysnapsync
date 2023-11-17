@@ -1,2 +1,23 @@
-inherits:
-  - .landscape.yml
+doc-warnings: true
+test-warnings: true
+member-warnings: true
+autodetect: false
+
+strictness: veryhigh
+
+max-line-length: 120
+
+python-targets:
+  - 3
+
+ignore-paths:
+  - docs/source/conf.py
+
+pydocstyle:
+  disable:
+    - D203
+    - D213
+
+pylint:
+  disable:
+    - too-few-public-methods
